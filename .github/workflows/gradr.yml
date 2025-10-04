@@ -1,0 +1,104 @@
+name: Gradr
+
+on:
+  push:
+    branches:
+    - main
+    tags:
+    - 'v*'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  autograde:
+    name: Auto-Grade Code Changes
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - name: Checkout Your Code
+      uses: actions/checkout@v4
+
+    - name: Prepare Environment
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: latest
+
+    - name: Acquire Audits
+      uses: actions/checkout@v4
+      with:
+        repository: Oluwasetemi/assignment-02-gradr-audits-js
+        path: audits
+
+    - name: Install Dependencies
+      run: |
+        cd audits
+        bun install
+
+    - name: Review Challenge - 1
+      run: |
+        cd audits
+        bun audit-ch-1
+
+    - name: Review Challenge - 2
+      if: always()
+      run: |
+        cd audits
+        bun audit-ch-2
+
+    - name: Review Challenge - 3
+      if: always()
+      run: |
+        cd audits
+        bun audit-ch-3
+
+    - name: Review Challenge - 4
+      if: always()
+      run: |
+        cd audits
+        bun audit-ch-4
+
+    - name: Review Challenge - 5
+      if: always()
+      run: |
+        cd audits
+        bun audit-ch-5
+
+    - name: Review Challenge - 6
+      if: always()
+      run: |
+        cd audits
+        bun audit-ch-6
+
+    - name: Review Challenge - 7
+      if: always()
+      run: |
+        cd audits
+        bun audit-ch-7
+
+    - name: Review Challenge - 8
+      if: always()
+      run: |
+        cd audits
+        bun audit-ch-8
+
+    - name: Report Audits
+      if: always()
+      uses: Oluwasetemi/jest-to-sheets-modified@v2.1.5
+      with:
+        challenge: 'ch-1;ch-2;ch-3;ch-4;ch-5;ch-6;ch-7;ch-8'
+        lang: javascript
+        server: https://api.sheetson.com/v2/sheets
+        sheetid: 1NlCE523gixgXrmtSzqWEFo_63DfPgIK2F8xrcyE61go
+        token: rLYJMutJkU2vF4N4V2En3LucORJhZVQ3LmIVbylHcrSowmnBLmsi-nIKPfI
+        sheet: month1
